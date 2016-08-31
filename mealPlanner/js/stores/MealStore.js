@@ -10,6 +10,12 @@ function loadMealData(data) {
     _meal = data[0];
 }
 
+// Update servings
+function updateServings(sku, servings) {
+    var key = _.findIndex(_meal.ingredients, function(item) {return item.sku == sku});
+    _meal.ingredients[key].servings = servings;
+}
+
 var MealStore = _.extend({}, EventEmitter.prototype, {
 
     // Return Meal data
@@ -44,6 +50,11 @@ AppDispatcher.register(function(payload) {
         // Respond to REVEIVE_DATA action
         case MealPlannerConstants.RECEIVE_DATA:
             loadMealData(action.data);
+            break;
+
+        // Respond to UPDATE_SERVINGS action
+        case MealPlannerConstants.UPDATE_SERVINGS:
+            updateServings(action.sku, action.servings);
             break;
 
         default:
